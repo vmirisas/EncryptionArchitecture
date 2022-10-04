@@ -3,6 +3,6 @@ public class Main {
         TxtFile file = new TxtFile();
         file.Import();
 
-        file.Export();
+
     }
 }
