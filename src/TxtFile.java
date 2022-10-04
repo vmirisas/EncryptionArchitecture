@@ -12,6 +12,11 @@ public class TxtFile implements FileManager {
     ArrayList<String> dataFields = new ArrayList<>();
     ArrayList<String> dataValues = new ArrayList<>();
 
+    private int rows;
+    private int columns;
+    private int counter = 0;
+    private String[][] dataValuesMatrix = new String[rows][columns];
+
 
 
     @Override
@@ -27,6 +32,8 @@ public class TxtFile implements FileManager {
                 dataFields.add(field);
             }
 
+            System.out.println(dataFields);
+
             while(scanner.hasNextLine()) {
                 String input = scanner.nextLine();
                 String[] dataValuesString = input.split("\t");
@@ -39,25 +46,36 @@ public class TxtFile implements FileManager {
             e.printStackTrace();
         }
 
-    }
+        rows = dataValues.size() / dataFields.size();
+        columns = dataFields.size();
 
-
-    int counter = 0;
-
-    public String[][] DataValuesMatrixConstructor(int rows, int columns){
-        String[][] dataValuesMatrix = new String[rows][columns];
-
+        //String[][] dataValuesMatrix = new String[rows][columns];
         for(int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
-                dataValuesMatrix[i][j] = dataValues.get(counter);
+                this.dataValuesMatrix[i][j] = dataValues.get(counter);
                 counter++;
             }
         }
-        return dataValuesMatrix;
+
     }
+
+
 
     @Override
     public void Export(){
 
     }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+
+
+
+
 }
