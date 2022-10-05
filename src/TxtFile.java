@@ -14,31 +14,27 @@ public class TxtFile implements FileManager {
 
     private int rows;
     private int columns;
-    private int counter = 0;
     private String[][] dataValuesMatrix = new String[rows][columns];
 
 
-
     @Override
-    public void Import(){
-        System.out.println("Choose the data file for encryption");
-        String fileLocation = scanner.nextLine();
+    public void Import(String inputFileLocation){
+        //System.out.println("Choose the data file for encryption");
+        //String fileLocation = scanner.nextLine();
 
         try {
-            scanner = new Scanner(new BufferedReader(new FileReader(fileLocation)));
+            scanner = new Scanner(new BufferedReader(new FileReader(inputFileLocation)));
             String fields = scanner.nextLine();
             String[] fieldsToSeparate = fields.split("\t");
             for (String field : fieldsToSeparate) {
-                dataFields.add(field);
+                this.dataFields.add(field);
             }
-
-            System.out.println(dataFields);
 
             while(scanner.hasNextLine()) {
                 String input = scanner.nextLine();
                 String[] dataValuesString = input.split("\t");
                 for(String dataValue : dataValuesString){
-                    dataValues.add(dataValue);
+                    this.dataValues.add(dataValue);
                 }
             }
             scanner.close();
@@ -46,23 +42,33 @@ public class TxtFile implements FileManager {
             e.printStackTrace();
         }
 
-        rows = dataValues.size() / dataFields.size();
-        columns = dataFields.size();
-
-        //String[][] dataValuesMatrix = new String[rows][columns];
-        for(int i = 0; i < rows; i++){
-            for (int j = 0; j < columns; j++){
-                this.dataValuesMatrix[i][j] = dataValues.get(counter);
-                counter++;
-            }
-        }
+        this.rows = this.dataValues.size() / this.dataFields.size();
+        this.columns = this.dataFields.size();
+        PopulateDataValuesMatrix();
 
     }
 
 
+    private void PopulateDataValuesMatrix(){
+        int counter = 0;
+        String[][] dataMatrix = new String[rows][columns];
+        for (int i = 0; i < this.rows; i++){
+            for (int j = 0; j < this.columns; j++){
+                dataMatrix[i][j] = this.dataValues.get(counter);
+                counter++;
+            }
+        }
+        this.dataValuesMatrix = dataMatrix;
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                System.out.println(this.dataValuesMatrix[i][j]);
+            }
+        }
+    }
+
 
     @Override
-    public void Export(){
+    public void Export(String outputFileDestination){
 
     }
 
@@ -74,7 +80,13 @@ public class TxtFile implements FileManager {
         return columns;
     }
 
+    public ArrayList<String> getDataFields() {
+        return dataFields;
+    }
 
+    public ArrayList<String> getDataValues() {
+        return dataValues;
+    }
 
 
 

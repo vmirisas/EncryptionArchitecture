@@ -6,8 +6,8 @@ package Interfaces;
 
 public interface FileManager {
 
-    void Import();
+    void Import(String inputFileLocation);
 
-    void Export();
+    void Export(String outputFileDestination);
 
 }
