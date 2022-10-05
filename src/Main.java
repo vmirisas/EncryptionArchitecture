@@ -32,9 +32,11 @@ public class Main {
 
         System.out.println("Choose the configuration file");
         String configurationFileLocation = scanner.nextLine();
-        ConfigurationFile configurationFile = new ConfigurationFile();
-        configurationFile.ConfigurationFileChoice(configurationFileLocation);
-        System.out.println(configurationFile.getConfiguredFields());
+//        ConfigurationFile configurationFile = new ConfigurationFile();
+//        configurationFile.ConfigurationFileChoice(configurationFileLocation);
+        file.ConfigurationFileChoice(configurationFileLocation);
+        System.out.println(file.getConfiguredFields());
+        System.out.println(file.getSameIndexArray());
 
 
     }

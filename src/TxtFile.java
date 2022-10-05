@@ -9,8 +9,13 @@ import java.util.Scanner;
 public class TxtFile implements FileManager {
 
     Scanner scanner = new Scanner(System.in);
-    ArrayList<String> dataFields = new ArrayList<>();
-    ArrayList<String> dataValues = new ArrayList<>();
+    private ArrayList<String> dataFields = new ArrayList<>();
+    private ArrayList<String> dataValues = new ArrayList<>();
+    private ArrayList<String> configuredFields = new ArrayList<>();
+
+    private ArrayList<Integer> sameIndexArray = new ArrayList<>();
+
+
 
     private int rows;
     private int columns;
@@ -46,6 +51,23 @@ public class TxtFile implements FileManager {
         this.columns = this.dataFields.size();
         PopulateDataValuesMatrix();
 
+        this.sameIndexArray = SameFieldIndex(dataFields, configuredFields);
+
+    }
+
+    public void ConfigurationFileChoice(String configureFileLocation){
+        try {
+            Scanner configurationReader = new Scanner(new BufferedReader(new FileReader(configureFileLocation)));
+            String fieldsToConfigureString = configurationReader.nextLine();
+            String[] fieldsToSeparateFromConfigureFile = fieldsToConfigureString.split("\t");
+            //System.out.println(Arrays.toString(fieldsToSeparateFromConfigureFile));
+            for (String field : fieldsToSeparateFromConfigureFile) {
+                this.configuredFields.add(field);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -64,6 +86,18 @@ public class TxtFile implements FileManager {
                 System.out.println(this.dataValuesMatrix[i][j]);
             }
         }
+    }
+
+    public ArrayList<Integer> SameFieldIndex(ArrayList dataFields, ArrayList configuredFields){
+        ArrayList<Integer> sameFieldIndex = new ArrayList<>();
+        for(int i = 0; i < dataFields.size(); i++){
+            for (int j = 0; j < configuredFields.size(); j++){
+                if(dataFields.get(i).equals(configuredFields.get(j))){
+                    sameFieldIndex.add(dataFields.indexOf(dataFields.get(i)));
+                }
+            }
+        }
+        return sameFieldIndex;
     }
 
 
@@ -88,6 +122,13 @@ public class TxtFile implements FileManager {
         return dataValues;
     }
 
+    public ArrayList<String> getConfiguredFields() {
+        return configuredFields;
+    }
+
+    public ArrayList<Integer> getSameIndexArray() {
+        return sameIndexArray;
+    }
 
 
 }
