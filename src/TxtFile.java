@@ -27,14 +27,14 @@ public class TxtFile implements FileManager, Encryptor {
         try {
             scanner = new Scanner(new BufferedReader(new FileReader(inputFileLocation)));
             String fields = scanner.nextLine();
-            String[] fieldsToSeparate = fields.split("\t");
+            String[] fieldsToSeparate = fields.split("\\s+");
             for (String field : fieldsToSeparate) {
                 this.dataFields.add(field);
             }
 
             while(scanner.hasNextLine()) {
                 String input = scanner.nextLine();
-                String[] dataValuesString = input.split("\t");
+                String[] dataValuesString = input.split("\\s+");
                 for(String dataValue : dataValuesString){
                     this.dataValues.add(dataValue);
                 }
@@ -53,7 +53,7 @@ public class TxtFile implements FileManager, Encryptor {
         try {
             Scanner configurationReader = new Scanner(new BufferedReader(new FileReader(configureFileLocation)));
             String fieldsToConfigureString = configurationReader.nextLine();
-            String[] fieldsToSeparateFromConfigureFile = fieldsToConfigureString.split("\t");
+            String[] fieldsToSeparateFromConfigureFile = fieldsToConfigureString.split("\\s+");
             for (String field : fieldsToSeparateFromConfigureFile) {
                 this.configuredFields.add(field);
             }
