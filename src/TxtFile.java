@@ -19,6 +19,8 @@ public class TxtFile implements FileManager, Encryptor {
     private String[][] dataEncryptedValuesMatrix = new String[rows][columns];
     private String[][] dataDecryptedValuesMatrix = new String[rows][columns];
 
+
+
     @Override
     public void Import(String inputFileLocation){
 
@@ -172,6 +174,10 @@ public class TxtFile implements FileManager, Encryptor {
 
     public String[][] getDataEncryptedValuesMatrix() {
         return dataEncryptedValuesMatrix;
+    }
+
+    public String[][] getDataDecryptedValuesMatrix() {
+        return dataDecryptedValuesMatrix;
     }
 
 }

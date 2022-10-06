@@ -45,10 +45,10 @@ public class Main {
                                 file.setSecretKey(secretKey);
                                 file.encrypt();
 
-                                System.out.println("Set the destination of the encrypted file");
+                                System.out.println("Set the name of the encrypted file");
                                 String destinationPath = scanner.nextLine();
-                                String[][] valuesToEncrypt = file.getDataValuesMatrix();
-                                file.Export(destinationPath, valuesToEncrypt);
+                                String[][] encryptedValuesToWrite = file.getDataEncryptedValuesMatrix();
+                                file.Export(destinationPath, encryptedValuesToWrite);
                                 quit2 = true;
                                 break;
                             case 2:
@@ -69,11 +69,11 @@ public class Main {
                             int decryptChoice = Integer.parseInt(scanner.nextLine());
                             switch (decryptChoice){
                                 case 1:
-                                    System.out.println("Set the destination of the decrypted file");
+                                    System.out.println("Set the name of the decrypted file");
                                     String decryptionDestinationPath = scanner.nextLine();
                                     file.decrypt();
-                                    String[][] valuesToDecrypt = file.getDataEncryptedValuesMatrix();
-                                    file.Export(decryptionDestinationPath, valuesToDecrypt);
+                                    String[][] decryptedValuesToWrite = file.getDataDecryptedValuesMatrix();
+                                    file.Export(decryptionDestinationPath, decryptedValuesToWrite);
                                     quit3 = true;
                                     break;
                                 case 2:
