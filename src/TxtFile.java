@@ -132,7 +132,16 @@ public class TxtFile implements FileManager, Encryptor {
         String fileSeparator = File.separator;
         String exportDirectoryPath = fileSeparator + "Users" + fileSeparator + "vmagkounis" + fileSeparator + "Desktop" + fileSeparator + "Java_training" + fileSeparator + "EncryptionArchitecture" + fileSeparator + "src" + fileSeparator + "Files";
         try (BufferedWriter cypheredFile = new BufferedWriter(new FileWriter(exportDirectoryPath + fileSeparator + outputFileDestination))){
-            cypheredFile.write("ID" + "\t" + "NAME" + "\t" + "SURNAME" + "\t" + "PHONE_NUMBER"+ "\n");
+            String dataFieldsRow = "";
+            for (int i = 0; i < dataFields.size(); i++){
+                if (i < dataFields.size()-1){
+                    dataFieldsRow += dataFields.get(i) + "\t";
+                } else {
+                    dataFieldsRow += dataFields.get(i) + "\n";
+                }
+            }
+            cypheredFile.write(dataFieldsRow);
+
             for (int i = 0; i < rows; i++){
                 String exportedRow;
                 for (int j = 0; j < columns; j++) {
@@ -152,7 +161,6 @@ public class TxtFile implements FileManager, Encryptor {
     public ArrayList<String> getDataFields() {
         return dataFields;
     }
-
 
     public ArrayList<String> getConfiguredFields() {
         return configuredFields;

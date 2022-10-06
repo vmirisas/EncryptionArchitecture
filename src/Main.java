@@ -5,12 +5,10 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<String> dataFields;
-        ArrayList<String> dataValues = new ArrayList<>();
+        //ArrayList<String> dataValues;
         ArrayList<String> configuredFields;
 
-
         boolean quit = false;
-
 
         while (!quit){
             System.out.println("Choose the the type of the files you will work with");
@@ -25,15 +23,11 @@ public class Main {
                     file.Import(fileLocation);
                     dataFields = file.getDataFields();
 
-
                     System.out.println("Choose the configuration file");
                     String configurationFileLocation = scanner.nextLine();
-
                     file.ConfigurationFileChoice(configurationFileLocation);
 
                     configuredFields = file.getConfiguredFields();
-
-
                     file.SameFieldIndex(dataFields, configuredFields);
 
                     boolean quit2 = false;
@@ -91,7 +85,6 @@ public class Main {
                                     break;
                             }
                         }
-
                     }
                     quit = true;
                     break;
