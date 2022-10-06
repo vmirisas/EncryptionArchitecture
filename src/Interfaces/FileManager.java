@@ -8,6 +8,6 @@ public interface FileManager {
 
     void Import(String inputFileLocation);
 
-    void Export(String outputFileDestination);
+    void Export(String outputFileDestination, String[][] array);
 
 }

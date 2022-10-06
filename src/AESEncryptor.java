@@ -1,5 +1,3 @@
-import Interfaces.Anonymiser;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
@@ -8,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class AESEncryptor implements Anonymiser {
+public class AESEncryptor {
     private static SecretKeySpec secretKey;
     private static byte[] key;
 
@@ -25,8 +23,7 @@ public class AESEncryptor implements Anonymiser {
         }
     }
 
-    @Override
-    public String encrypt(final String strToEncrypt, final String secret) {
+    public static String encrypt(final String strToEncrypt, final String secret) {
         try {
             setKey(secret);
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -38,8 +35,7 @@ public class AESEncryptor implements Anonymiser {
         return null;
     }
 
-    @Override
-    public String decrypt(final String strToDecrypt, final String secret) {
+    public static String decrypt(final String strToDecrypt, final String secret) {
         try {
             setKey(secret);
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");

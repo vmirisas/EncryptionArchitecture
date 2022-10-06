@@ -1,31 +1,26 @@
+import Interfaces.Encryptor;
 import Interfaces.FileManager;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class TxtFile implements FileManager {
+public class TxtFile implements FileManager, Encryptor {
 
     Scanner scanner = new Scanner(System.in);
     private ArrayList<String> dataFields = new ArrayList<>();
     private ArrayList<String> dataValues = new ArrayList<>();
     private ArrayList<String> configuredFields = new ArrayList<>();
-
-    private ArrayList<Integer> sameIndexArray = new ArrayList<>();
-
-
-
+    private ArrayList<Integer> sameFieldIndexArray = new ArrayList<>();
+    private String secretKey;
     private int rows;
     private int columns;
     private String[][] dataValuesMatrix = new String[rows][columns];
-
+    private String[][] dataEncryptedValuesMatrix = new String[rows][columns];
+    private String[][] dataDecryptedValuesMatrix = new String[rows][columns];
 
     @Override
     public void Import(String inputFileLocation){
-        //System.out.println("Choose the data file for encryption");
-        //String fileLocation = scanner.nextLine();
 
         try {
             scanner = new Scanner(new BufferedReader(new FileReader(inputFileLocation)));
@@ -50,9 +45,6 @@ public class TxtFile implements FileManager {
         this.rows = this.dataValues.size() / this.dataFields.size();
         this.columns = this.dataFields.size();
         PopulateDataValuesMatrix();
-
-        this.sameIndexArray = SameFieldIndex(dataFields, configuredFields);
-
     }
 
     public void ConfigurationFileChoice(String configureFileLocation){
@@ -60,14 +52,13 @@ public class TxtFile implements FileManager {
             Scanner configurationReader = new Scanner(new BufferedReader(new FileReader(configureFileLocation)));
             String fieldsToConfigureString = configurationReader.nextLine();
             String[] fieldsToSeparateFromConfigureFile = fieldsToConfigureString.split("\t");
-            //System.out.println(Arrays.toString(fieldsToSeparateFromConfigureFile));
             for (String field : fieldsToSeparateFromConfigureFile) {
                 this.configuredFields.add(field);
             }
+            scanner.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -81,54 +72,98 @@ public class TxtFile implements FileManager {
             }
         }
         this.dataValuesMatrix = dataMatrix;
-        for (int i = 0; i < this.rows; i++) {
-            for (int j = 0; j < this.columns; j++) {
-                System.out.println(this.dataValuesMatrix[i][j]);
-            }
-        }
     }
 
-    public ArrayList<Integer> SameFieldIndex(ArrayList dataFields, ArrayList configuredFields){
-        ArrayList<Integer> sameFieldIndex = new ArrayList<>();
+    public void SameFieldIndex(ArrayList dataFields, ArrayList configuredFields){
         for(int i = 0; i < dataFields.size(); i++){
             for (int j = 0; j < configuredFields.size(); j++){
                 if(dataFields.get(i).equals(configuredFields.get(j))){
-                    sameFieldIndex.add(dataFields.indexOf(dataFields.get(i)));
+                    this.sameFieldIndexArray.add(dataFields.indexOf(dataFields.get(i)));
                 }
             }
         }
-        return sameFieldIndex;
     }
-
 
     @Override
-    public void Export(String outputFileDestination){
-
+    public void setSecretKey(String key) {
+        this.secretKey = key;
     }
 
-    public int getRows() {
-        return rows;
+    @Override
+    public void encrypt() {
+        String[][] encryptedDataMatrix = new String[rows][columns];
+        for(int i = 0; i < this.rows; i++){
+            for (int j = 0; j < this.columns; j++){
+                for (int k = 0; k < this.sameFieldIndexArray.size(); k++){
+                    if(this.sameFieldIndexArray.get(k) == j){
+                        encryptedDataMatrix[i][j] =  AESEncryptor.encrypt(this.dataValuesMatrix[i][j], this.secretKey) ;
+                        break;
+                    } else {
+                        encryptedDataMatrix[i][j] = this.dataValuesMatrix[i][j];
+                    }
+
+                }
+            }
+        }
+        this.dataEncryptedValuesMatrix = encryptedDataMatrix;
     }
 
-    public int getColumns() {
-        return columns;
+    @Override
+    public void decrypt() {
+        String[][] decryptedDataMatrix = new String[rows][columns];
+        for(int i = 0; i < this.rows; i++){
+            for (int j = 0; j < this.columns; j++){
+                for (int k = 0; k < this.sameFieldIndexArray.size(); k++){
+                    if(this.sameFieldIndexArray.get(k) == j){
+                        decryptedDataMatrix[i][j] =  AESEncryptor.decrypt(this.dataEncryptedValuesMatrix[i][j], this.secretKey) ;
+                        break;
+                    } else {
+                        decryptedDataMatrix[i][j] = this.dataEncryptedValuesMatrix[i][j];
+                    }
+
+                }
+            }
+        }
+        this.dataDecryptedValuesMatrix = decryptedDataMatrix;
+    }
+
+    @Override
+    public void Export(String outputFileDestination, String[][] dataMatrix){
+        String fileSeparator = File.separator;
+        String exportDirectoryPath = fileSeparator + "Users" + fileSeparator + "vmagkounis" + fileSeparator + "Desktop" + fileSeparator + "Java_training" + fileSeparator + "EncryptionArchitecture" + fileSeparator + "src" + fileSeparator + "Files";
+        try (BufferedWriter cypheredFile = new BufferedWriter(new FileWriter(exportDirectoryPath + fileSeparator + outputFileDestination))){
+            cypheredFile.write("ID" + "\t" + "NAME" + "\t" + "SURNAME" + "\t" + "PHONE_NUMBER"+ "\n");
+            for (int i = 0; i < rows; i++){
+                String exportedRow;
+                for (int j = 0; j < columns; j++) {
+                    if (j < columns - 1) {
+                        exportedRow = dataMatrix[i][j] + "\t";
+                    } else {
+                        exportedRow = dataMatrix[i][j] + "\n";
+                    }
+                    cypheredFile.write(exportedRow);
+                }
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<String> getDataFields() {
         return dataFields;
     }
 
-    public ArrayList<String> getDataValues() {
-        return dataValues;
-    }
 
     public ArrayList<String> getConfiguredFields() {
         return configuredFields;
     }
 
-    public ArrayList<Integer> getSameIndexArray() {
-        return sameIndexArray;
+    public String[][] getDataValuesMatrix() {
+        return dataValuesMatrix;
     }
 
+    public String[][] getDataEncryptedValuesMatrix() {
+        return dataEncryptedValuesMatrix;
+    }
 
 }
